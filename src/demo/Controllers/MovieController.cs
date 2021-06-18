@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using demo.core.Services;
 using demo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace demo.Controllers
 {
@@ -23,19 +25,78 @@ namespace demo.Controllers
         }
 
         [HttpGet]
+        [Route("user")]
         public IEnumerable<MovieModel> Get()
         {
-            var eList = _movieService.GetMovies();
-
-            var list = new List<MovieModel>();
-
-            foreach(var m in eList)
-            {
-                list.Add(new MovieModel(m.Id, m.Title));
-            }
-
-
-            return list;
+            throw new NotImplementedException();
         }
+
+        [HttpGet]
+        [Route("user/{userId}")]
+        public IEnumerable<MovieModel> Getbyid(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpPost("user")]
+        public async Task<Object> AddPerson([FromBody] UserEntity user)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class UserEntity
+    {
+        public UserEntity(int id, string username)
+        {
+            Id = id;
+            UserName = username;
+        }
+
+        public int Id { get; private set; }
+        public string UserName { get; private set; }
+    }
+
+    public interface IUserService
+    {
+        void SaveUser(UserEntity user);
+
+        UserEntity SaveUser(int userId);
+    }
+
+    public class FileUserService : IUserService
+    {
+        public void SaveUser(UserEntity user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserEntity SaveUser(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void JsonSaveJson(UserEntity user)
+        {
+            // serialize JSON to a string and then write string to a file
+            File.WriteAllText(@"c:\movie.json", JsonConvert.SerializeObject(user));
+
+            // serialize JSON directly to a file
+            using (System.IO.StreamWriter file = File.CreateText(@"c:\" + user.Id + ".json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, user);
+            }
+        }
+
+        public void LoadJson()
+        {
+            using (StreamReader r = new StreamReader("file.json"))
+            {
+                string json = r.ReadToEnd();
+                UserEntity user = JsonConvert.DeserializeObject<UserEntity>(json);
+            }
+        }
+
     }
 }

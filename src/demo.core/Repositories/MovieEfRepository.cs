@@ -17,7 +17,9 @@ namespace demo.core.Repositories
         {
             this._dbContext = dbContext;
 
-            _dbContext.Movies.AddRange(
+            if(_dbContext.Movies.Count() == 0)
+            {
+                _dbContext.Movies.AddRange(
               new List<Movie>()
                         {
                             new Movie(1){
@@ -31,7 +33,8 @@ namespace demo.core.Repositories
                             }
                         });
 
-            _dbContext.SaveChanges();
+                _dbContext.SaveChanges();
+            }
         }
 
         public IList<Movie> GetMovies()

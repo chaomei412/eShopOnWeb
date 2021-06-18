@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using demo.core.Domain.Entities;
 using demo.core.Domain.Repositories;
 using demo.core.EF;
 using demo.core.Repositories;
