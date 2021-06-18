@@ -39,9 +39,30 @@ namespace demo.Controllers
         }
 
         [HttpPost("user")]
-        public async Task<Object> AddPerson([FromBody] UserEntity user)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Product))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult<UserEntity> AddUser([FromBody] UserEntity user)
         {
             throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(NewSessionModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                await _sessionRepository.AddAsync(new BrainstormSession()
+                {
+                    DateCreated = DateTimeOffset.Now,
+                    Name = model.SessionName
+                });
+            }
+
+            return RedirectToAction(actionName: nameof(Index));
         }
     }
 
@@ -51,10 +72,13 @@ namespace demo.Controllers
         {
             Id = id;
             UserName = username;
+            CreatedOn = DateTime.UtcNow
         }
 
         public int Id { get; private set; }
         public string UserName { get; private set; }
+        public DateTime CreatedOn { get; private set; }
+
     }
 
     public interface IUserService
